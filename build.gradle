@@ -34,3 +34,15 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+bootJar {
+	enabled = true; // bootJar 활성화
+	mainClassName = 'com.capstone.backend.BackendApplication'
+}
+
+jar {
+	enabled = false
+}
+
+tasks.getByName<Jar>("jar") {
+	enabled = false
