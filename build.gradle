@@ -38,7 +38,3 @@ tasks.named('test') {
 jar {
 	enabled = false
 }
-
-tasks.getByName<Jar>("jar") {
-	enabled = false
-}
