@@ -1,4 +1,4 @@
-🔗 [프론트엔드 바로가기](https://github.com/deceit-cat/socket "deceit-cat/socket")
+🔗 [프론트엔드 Repo 바로가기](https://github.com/deceit-cat/socket "deceit-cat/socket")
 # Backend
 ## 1. 개발 환경
 > IntelliJ IDEA</br>
@@ -12,4 +12,11 @@
 > Elastic IP주소로 접속합니다.</br>
 ```
 43.202.161.139:8080/
+```
+### 2.2. API Docs 주소
+> Swagger 3.0.0 버전을 적용합니다.</br>
+> 라이브러리 : springdoc-openapi-ui
+
+```
+http://43.202.161.139:8080/swagger-ui/index.html
 ```
