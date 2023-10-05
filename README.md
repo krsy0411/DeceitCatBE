@@ -18,5 +18,5 @@
 > 라이브러리 : springdoc-openapi-ui
 
 ```
-http://43.202.161.139:8080/swagger-ui/index.html
+http://43.202.161.139:8080/api-docs/
 ```
