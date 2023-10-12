@@ -1,6 +1,6 @@
 spring:
   profiles:
-    default: prod
+    default: prod # RDS 기본 연결
     active: dev, prod
 
 springdoc:
