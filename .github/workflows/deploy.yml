@@ -49,8 +49,8 @@ jobs:
         aws-secret-access-key: ${{ secrets.CICD_SECRET_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
-    # (5)
-    - name: Set MySQL env
+    # (5) RDS 환경변수 설정
+    - name: Set RDS env
       run: |
         echo "MYSQL_URL=${{ secrets.MYSQL_URL }}" >> $GITHUB_ENV
         echo "MYSQL_USER_NAME=${{ secrets.MYSQL_USER_NAME }}" >> $GITHUB_ENV
