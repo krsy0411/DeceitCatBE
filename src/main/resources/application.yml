@@ -1,16 +1,26 @@
-#spring:
-#  profiles:
-#    default: prod # RDS 기본 연결
-#    active: dev, prod
-
 ### RDS DB ###
 spring:
+  profiles:
+    default: prod # RDS 기본 연결
+    active: dev, prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
 
+  jpa:
+    hibernate:
+      ddl-auto: create # 스키마 자동 생성
+    show-sql: true # SQL 쿼리 출력
+    properties:
+      hibernate:
+        format_sql: true # SQL pretty print
+    database: mysql
+
+logging.level:
+  org.hibernate.SQL: debug
+  com.capstone.backend: debug
 springdoc:
   packages-to-scan: com.capstone.backend.controller # 컨트롤러 가져오기
   default-consumes-media-type: application/json;charset=UTF-8
