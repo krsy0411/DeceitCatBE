@@ -1,7 +1,15 @@
+#spring:
+#  profiles:
+#    default: prod # RDS 기본 연결
+#    active: dev, prod
+
+### RDS DB ###
 spring:
-  profiles:
-    default: prod # RDS 기본 연결
-    active: dev, prod
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
 
 springdoc:
   packages-to-scan: com.capstone.backend.controller # 컨트롤러 가져오기
