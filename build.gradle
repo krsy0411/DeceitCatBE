@@ -25,13 +25,15 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // RDS 연동
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'// RDS 연동
 	runtimeOnly 'com.mysql:mysql-connector-j' // RDS 연동
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11' // Swagger
+	implementation 'org.springframework.boot:spring-boot-starter-websocket' // 웹 소켓 설정
 }
 
 tasks.named('test') {
