@@ -24,16 +24,20 @@ repositories {
 }
 
 dependencies {
+	// https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api
+	implementation group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'
+	implementation group: 'com.google.firebase', name: 'firebase-admin', version: '8.1.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'// RDS 연동
 	runtimeOnly 'com.mysql:mysql-connector-j' // RDS 연동
 	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11' // Swagger
 	implementation 'org.springframework.boot:spring-boot-starter-websocket' // 웹 소켓 설정
+
 }
 
 tasks.named('test') {
