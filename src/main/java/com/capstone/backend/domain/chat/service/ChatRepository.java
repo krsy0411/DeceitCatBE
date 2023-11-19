@@ -1,5 +1,6 @@
 package com.capstone.backend.domain.chat.service;
 
+import com.capstone.backend.domain.chat.dto.ChatRoom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
@@ -29,7 +30,7 @@ public class ChatRepository {
     // roomId 기준으로 채팅방 찾기
     public ChatRoom findByRoomId(String roomId){
 
-        return chatRoomMap.get(roomId);;
+        return chatRoomMap.get(roomId);
     }
 
     // roomName 으로 채팅방 만들기
@@ -76,7 +77,7 @@ public class ChatRepository {
         // 만약 username이 중복이라면 랜덤한 숫자를 붙여준다.
         // 이 때 랜덤한 숫자를 붙였을때 getUserList 안에 있는 닉네임이라면 다시 랜덤한 숫자 붙이기
         while(chatRoom.getUserList().containsValue(temp)){
-            int ranNum = (int) (Math.random() * 100) + 1;
+            int ranNum = (int)(Math.random() * 100) + 1;
             temp = username+ranNum;
         }
 
@@ -106,5 +107,4 @@ public class ChatRepository {
 
         return list;
     }
-
 }

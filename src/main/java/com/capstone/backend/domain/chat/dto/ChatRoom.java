@@ -1,4 +1,4 @@
-package com.capstone.backend.domain.chat.service;
+package com.capstone.backend.domain.chat.dto;
 
 import lombok.Data;
 import java.util.HashMap;
@@ -13,10 +13,10 @@ public class ChatRoom {
 
     private HashMap<String, String> userList = new HashMap<>();
 
-    public ChatRoom create(String roomId, String RoomName){
+    public ChatRoom create(String roomName){
         ChatRoom chatRoom = new ChatRoom();
-        this.roomId = UUID.randomUUID().toString();
-        this.roomName = roomName;
+        chatRoom.roomId = UUID.randomUUID().toString();
+        chatRoom.roomName = roomName;
 
         return chatRoom;
     }
