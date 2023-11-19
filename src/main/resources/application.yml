@@ -24,7 +24,7 @@ logging.level:
 
 ### Swagger ###
 springdoc:
-  packages-to-scan: com.capstone.backend.controller # 컨트롤러 가져오기
+  packages-to-scan: com.capstone.backend # 컨트롤러 가져오기
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:

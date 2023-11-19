@@ -1,4 +1,4 @@
-package com.capstone.backend.controller;
+package com.capstone.backend.domain.swagger.controller;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;

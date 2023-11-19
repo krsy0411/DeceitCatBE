@@ -1,4 +1,4 @@
-package com.capstone.backend.config;
+package com.capstone.backend.domain.swagger.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -17,8 +17,8 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("Springdoc 테스트")
-                .description("Springdoc을 사용한 Swagger UI 테스트")
+                .title("Contac.T")
+                .description("기만고양이🐱 API Docs")
                 .version("1.0.0");
     }
 }

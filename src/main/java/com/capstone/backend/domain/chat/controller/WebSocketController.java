@@ -1,6 +1,6 @@
-package com.capstone.backend.controller;
+package com.capstone.backend.domain.chat.controller;
 
-import dto.ChatDto;
+import com.capstone.backend.domain.chat.dto.ChatDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -14,6 +14,6 @@ public class WebSocketController {
 
     @MessageMapping("/chat")
     public void sendMessage(ChatDto chatDto, SimpMessageHeaderAccessor accessor) {
-        simpMessagingTemplate.convertAndSend("/sub/chat/" + chatDto.getChannelId(), chatDto);
+        simpMessagingTemplate.convertAndSend("/sub/chat/" + chatDto.getRoomId(), chatDto);
     }
 }
