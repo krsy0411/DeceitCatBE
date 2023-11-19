@@ -17,8 +17,8 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("Contac.T")
-                .description("기만고양이🐱 API Docs")
+                .title("Capstone API Docs")
+                .description("기만고양이🐱 Contac.T")
                 .version("1.0.0");
     }
 }

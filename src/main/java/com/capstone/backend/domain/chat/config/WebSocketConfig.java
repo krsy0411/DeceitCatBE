@@ -12,13 +12,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     /* 클라이언트가 웹 소켓 서버에 연결하는데 사용할 웹 소켓 엔드포인트 등록 */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws") // stomp 엔드포인트
+        registry.addEndpoint("/ws") // 클라이언트에 제공하는 엔드포인트
                 .setAllowedOrigins("*");
     }
 
     /* 한 클라이언트에서 다른 클라이언트로 메세지를 라우팅하는데 사용될 메세지 브로커 */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/sub");
-        registry.setApplicationDestinationPrefixes("/pub");
+        registry.enableSimpleBroker("/sub"); // 구독
+        registry.setApplicationDestinationPrefixes("/pub"); // sender
     }}

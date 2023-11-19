@@ -9,9 +9,7 @@ import java.util.*;
 
 @Repository
 @Slf4j
-//추후 DB와 연결 시 Service 와 Repository 로 분리 예정
-public class ChatRepository {
-
+public class ChatService {
     private Map<String, ChatRoom> chatRoomMap;
 
     @PostConstruct
@@ -21,25 +19,24 @@ public class ChatRepository {
 
     // 전체 채팅방 조회
     public List<ChatRoom> findAllRoom(){
-        //채팅방 생성 순서를 최근순으로 반환
+        // 최근 순으로 채팅방 정렬 후 반환
         List chatRooms = new ArrayList<>(chatRoomMap.values());
         Collections.reverse(chatRooms);
 
         return chatRooms;
     }
-    // roomId 기준으로 채팅방 찾기
+
+    // 채팅방 찾기 (roomId)
     public ChatRoom findByRoomId(String roomId){
 
         return chatRoomMap.get(roomId);
     }
 
-    // roomName 으로 채팅방 만들기
+    // 채팅방 생성 (roomName)
     public ChatRoom createChatRoom(String roomName){
-        //채팅방 이름으로 채팅 방 생성후
         ChatRoom chatRoom = new ChatRoom().create(roomName);
-        //map에 채팅방 아이디와 만들어진 채팅룸을 저장
+        // Hashmap에 채팅방 아이디와 만들어진 채팅방을 저장
         chatRoomMap.put(chatRoom.getRoomId(), chatRoom);
-
         return chatRoom;
     }
 
@@ -57,12 +54,11 @@ public class ChatRepository {
         chatRoom.setUserCount(chatRoom.getUserCount()-1);
     }
 
-    //채팅방 유저 리스트에 유저추가
-    public  String addUser(String roomId, String userName){
-
+    // 채팅방 유저 리스트에 유저 추가
+    public String addUser(String roomId, String userName){
         ChatRoom chatRoom = chatRoomMap.get(roomId);
         String userUUID = UUID.randomUUID().toString();
-        //아이디 중복 확인 후 userList에 추가
+        // 아이디 중복 확인 후 userList에 추가
         chatRoom.getUserList().put(userUUID,userName);
 
         return userUUID;
@@ -70,7 +66,6 @@ public class ChatRepository {
 
     // 채팅방 유저 이름 중복 확인
     public String isDuplicateName(String roomId,String username){
-
         ChatRoom chatRoom = chatRoomMap.get(roomId);
         String temp = username;
 
@@ -97,13 +92,17 @@ public class ChatRepository {
         return chatRoom.getUserList().get(userUUID);
     }
 
-    //채팅방 전체 userList 조회
+    // 채팅방 전체 userList 조회
     public List<String> getUserList(String roomId){
         List<String> list = new ArrayList<>();
 
         ChatRoom chatRoom = chatRoomMap.get(roomId);
 
-        chatRoom.getUserList().forEach((key,value) -> list.add(value));
+        if (chatRoom != null) {
+            chatRoom.getUserList().forEach((key,value) -> list.add(value));
+        } else {
+            log.error("Room ID {} 채팅방이 존재하지 않습니다.", roomId);
+        }
 
         return list;
     }
