@@ -49,7 +49,6 @@ public class ChatService {
 
     // 채팅방 인원 -1
     public void decreaseUser(String roomId){
-
         ChatRoom chatRoom = chatRoomMap.get(roomId);
         chatRoom.setUserCount(chatRoom.getUserCount()-1);
     }
