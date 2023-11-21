@@ -12,6 +12,7 @@ public class ChatDto {
         ENTER, CHAT, LEAVE
     }
     private MessageType type; // 메세지 타입
+    private boolean hidden; // 메세지 히든 값
     private String roomId; // 방 번호
     private String sender; // 채팅을 보낸 사람
     private String message; // 채팅 메세지

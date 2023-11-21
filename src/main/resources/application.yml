@@ -1,8 +1,9 @@
-### RDS DB ###
+## RDS DB ###
 spring:
   profiles:
     default: prod # RDS 기본 연결
     active: dev, prod
+    include: jwt, oauth # jwt, oauth 프로필 연결
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${MYSQL_URL}
@@ -17,6 +18,8 @@ spring:
       hibernate:
         format_sql: true # SQL pretty print
     database: mysql
+  main:
+    allow-circular-references: true
 
 logging.level:
   org.hibernate.SQL: debug

@@ -42,7 +42,6 @@ public class ChatService {
 
     // 채팅방 인원 +1
     public void increaseUser(String roomId){
-
         ChatRoom chatRoom = chatRoomMap.get(roomId);
         chatRoom.setUserCount(chatRoom.getUserCount()+1);
     }
