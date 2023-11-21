@@ -40,25 +40,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .formLogin().disable() // formLogin 사용 X
-            .httpBasic().disable()
-            .csrf().disable()
-            .headers().frameOptions().disable()
-            .and()
+                .formLogin().disable() // formLogin 사용 X
+                .httpBasic().disable()
+                .csrf().disable()
+                .headers().frameOptions().disable()
+                .and()
 
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
 
-            .authorizeRequests()
-            .antMatchers("/", "/v3/api-docs/**", "/api*", "/api-docs/**","/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**").permitAll()
-            .anyRequest().authenticated() // 다른 모든 요청은 인증되어야 함
-//            .anyRequest().permitAll()
-            .and()
+                .authorizeRequests()
+//                .antMatchers("/", "/v3/api-docs/**", "/api*", "/api-docs/**","/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**").permitAll()
+//                .anyRequest().authenticated() // 다른 모든 요청은 인증되어야 함
+                .anyRequest().permitAll()
+                .and()
 
-            // 소셜 로그인 설정
-            .oauth2Login()
-            .successHandler(oAuth2LoginSuccessHandler) // 동의하고 계속하기를 눌렀을 때 핸들러
-            .failureHandler(oAuth2LoginFailureHandler) // 소셜 로그인 실패 시 핸들러
+                // 소셜 로그인 설정
+                .oauth2Login()
+                .successHandler(oAuth2LoginSuccessHandler) // 동의하고 계속하기를 눌렀을 때 핸들러
+                .failureHandler(oAuth2LoginFailureHandler) // 소셜 로그인 실패 시 핸들러
                 .userInfoEndpoint().userService(customOAuth2UserService); // customUserService 설정
 
         http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
