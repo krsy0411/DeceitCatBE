@@ -39,9 +39,3 @@ out/
 ### Database ###
 application-dev.yml
 application-prod.yml
-
-### JWT ###
-application-jwt.yml
-
-### oAuth ###
-application-oauth.yml
