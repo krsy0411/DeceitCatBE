@@ -50,9 +50,9 @@ public class SecurityConfig {
             .and()
 
             .authorizeRequests()
-//            .antMatchers("/","/api*", "/api-docs/**","/swagger-ui/**", "/swagger-ui.html").permitAll()
-//            .anyRequest().authenticated() // 다른 모든 요청은 인증되어야 함
-            .anyRequest().permitAll()
+            .antMatchers("/", "/v3/api-docs/**", "/api*", "/api-docs/**","/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**").permitAll()
+            .anyRequest().authenticated() // 다른 모든 요청은 인증되어야 함
+//            .anyRequest().permitAll()
             .and()
 
             // 소셜 로그인 설정
