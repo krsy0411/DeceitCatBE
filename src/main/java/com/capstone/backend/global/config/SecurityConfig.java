@@ -41,7 +41,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .formLogin().disable() // formLogin 사용 X
-//            .httpBasic().disable()
+            .httpBasic().disable()
             .csrf().disable()
             .headers().frameOptions().disable()
             .and()
