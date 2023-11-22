@@ -59,9 +59,9 @@ jobs:
     # (6) yml 파일 환경변수 설정
     - name : Set yml File
       run: |
-        echo "JWT_TOKEN=${{ secrets.JWT_TOKEN }}" >> application-jwt.yml
-        echo "GOOGLE_ID=${{ secrets.GOOGLE_ID }}" >> application-oauth.yml
-        echo "GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }}" >> application-oauth.yml
+        echo "JWT_TOKEN=${{ secrets.JWT_TOKEN }}" >> ./src/main/resources/application-jwt.yml
+        echo "GOOGLE_ID=${{ secrets.GOOGLE_ID }}" >> ./src/main/resources/application-oauth.yml
+        echo "GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }}" >> ./src/main/resources/application-oauth.yml
 
     # (7) 빌드 결과물을 S3 버킷에 업로드
     - name: Upload to AWS S3
