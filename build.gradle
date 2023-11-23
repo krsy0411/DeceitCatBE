@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '2.7.17-SNAPSHOT'
+	id 'org.springframework.boot' version '2.7.3'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
@@ -8,7 +8,7 @@ group = 'com.capstone'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '11'
+	sourceCompatibility = JavaVersion.VERSION_11
 }
 
 configurations {
@@ -33,6 +33,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'mysql:mysql-connector-java:8.0.33'
 	implementation 'org.springframework.boot:spring-boot-starter-security'// RDS 연동
 	runtimeOnly 'com.mysql:mysql-connector-j' // RDS 연동
 	compileOnly 'org.projectlombok:lombok'
