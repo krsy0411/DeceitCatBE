@@ -62,6 +62,10 @@ jobs:
         echo "JWT_TOKEN=${{ secrets.JWT_TOKEN }}" >> ./src/main/resources/application-jwt.yml
         echo "GOOGLE_ID=${{ secrets.GOOGLE_ID }}" >> ./src/main/resources/application-oauth.yml
         echo "GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }}" >> ./src/main/resources/application-oauth.yml
+        echo "NAVER_ID=${{ secrets.NAVER_ID }}" >> ./src/main/resources/application-oauth.yml
+        echo "NAVER_SECRET=${{ secrets.NAVER_SECRET }}" >> ./src/main/resources/application-oauth.yml
+        echo "KAKAO_ID=${{ secrets.KAKAO_ID }}" >> ./src/main/resources/application-oauth.yml
+        echo "KAKAO_SECRET=${{ secrets.KAKAO_SECRET }}" >> ./src/main/resources/application-oauth.yml
 
     # (7) 빌드 결과물을 S3 버킷에 업로드
     - name: Upload to AWS S3
