@@ -35,11 +35,11 @@ public class User {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private SocialType socialType; // KAKAO
+    private SocialType socialType; // GOOGLE, NAVER, KAKAO
 
     private String socialId; // 로그인 한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
 
-    private String refreshToken; // 리스레시 토큰
+    private String refreshToken; // 리프레시 토큰
 
     public void authorizeUser() {
         this.role = Role.USER;
