@@ -45,9 +45,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket' // 웹 소켓 설정
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
+//tasks.named('test') {
+//	useJUnitPlatform()
+//}
 
 jar {
 	enabled = false
