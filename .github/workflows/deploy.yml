@@ -4,8 +4,7 @@ name: Deploy to AWS EC2
 on:
   push:
     branches:
-#      - main # main에 push 할 경우 Deploy to AWS EC2
-      - build # build Test 용도
+      - main # main에 push 할 경우 Deploy to AWS EC2
 
 # 설정한 환경 변수 값 채워넣기
 # 리전, 버킷 이름, CodeDeploy 앱 이름, CodeDeploy 배포 그룹 이름
