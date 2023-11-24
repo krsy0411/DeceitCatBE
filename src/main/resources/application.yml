@@ -1,7 +1,7 @@
 spring:
-  profiles:
-    default: prod # RDS 기본 연결
-    active: dev, prod
+#  profiles:
+#    default: prod # RDS 기본 연결
+#    active: dev, prod
 
   ## RDS DB ###
   datasource:
