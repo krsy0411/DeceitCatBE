@@ -1,7 +1,6 @@
 package com.capstone.backend.domain.user.service;
 
 import com.capstone.backend.domain.user.entity.Role;
-import com.capstone.backend.domain.user.entity.SocialType;
 import com.capstone.backend.domain.user.entity.User;
 import com.capstone.backend.domain.user.dto.UserSignUpDto;
 import com.capstone.backend.domain.user.repository.UserRepository;
@@ -28,14 +27,21 @@ public class UserService {
                 .name(userSignUpDto.getName())
                 .email(userSignUpDto.getEmail())
                 .password(userSignUpDto.getPassword())
-//                .role(Role.USER)
+                .role(Role.GUEST)
                 .build();
 
         user.passwordEncode(passwordEncoder);
         userRepository.save(user);
     }
-    public void addInfo(String email, Role role) throws Exception {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+
+    public void addInfo(String email, String socialId, Role role) throws Exception {
+        Optional<User> optionalUser;
+        if (socialId == null) { // email 값으로 유저 식별
+            optionalUser = userRepository.findByEmail(email);
+        } else {
+            optionalUser = userRepository.findBySocialId(socialId);
+        }
+
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             if (role.equals(Role.PARENT) || role.equals(Role.TEACHER)) {

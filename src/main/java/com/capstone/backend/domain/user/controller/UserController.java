@@ -20,9 +20,9 @@ public class UserController {
     }
 
     @PostMapping("/api/users/{email}/add-info")
-    public ResponseEntity<String> setUserRole(@PathVariable String email, @RequestParam Role role) {
+    public ResponseEntity<String> setUserRole(@RequestParam(required = false) String email, @RequestParam(required = false) String socialId, @RequestParam Role role) {
         try {
-            userService.addInfo(email, role);
+            userService.addInfo(email, socialId, role);
             return ResponseEntity.ok("사용자 역할이 성공적으로 업데이트되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
