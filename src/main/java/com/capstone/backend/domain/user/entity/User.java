@@ -17,21 +17,17 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
+    @Column
+    private String name; // 이름
+
     @Column(unique = true) // email 은 중복되지 않아야 하기 때문에 unique 하도록 설정
     private String email; // 이메일
 
     @Column
     private String password; // 비밀번호
 
-    @Column
-    private String nickname; // 닉네임
-
-    @Column
-    private String imgUrl; // 프로필 이미지
-
-    @Column
-    @Enumerated(EnumType.STRING)
-    private Role role; // 유저 역할
+//    @Column
+//    private String imgUrl; // 프로필 이미지
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -41,8 +37,18 @@ public class User {
 
     private String refreshToken; // 리프레시 토큰
 
-    public void authorizeUser() {
-        this.role = Role.USER;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Role role; // GUEST, PARENT, TEACHER
+
+    public void setRole(Role role) {
+        if (role == Role.PARENT) {
+            this.role = Role.PARENT;
+        } else if (role == Role.TEACHER) {
+            this.role = Role.TEACHER;
+        } else {
+            this.role = Role.GUEST; // default 값
+        }
     }
 
     public void passwordEncode(PasswordEncoder passwordEncoder) {

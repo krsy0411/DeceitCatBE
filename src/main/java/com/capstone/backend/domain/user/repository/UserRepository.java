@@ -9,10 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(String email);
-    Optional<User> findByNickname(String nickname);
-    Optional<User> findByRefreshToken(String refreshToken);
-
-    Optional<User> findBySocialTypeAndSocialId(SocialType socialType, String socialId);
+    Optional<User> findByEmail(String email); // 이메일로 사용자 찾기
+    Optional<User> findByName(String name); // 이름으로 사용자 찾기
+    Optional<User> findByRefreshToken(String refreshToken); // 리프레시 토큰으로 사용자 찾기
+    Optional<User> findBySocialTypeAndSocialId(SocialType socialType, String socialId); // 소셜 정보로 사용자 찾기
 
 }

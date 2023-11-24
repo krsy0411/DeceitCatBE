@@ -77,9 +77,9 @@ public class OAuthAttributes {
         return User.builder()
                 .socialType(socialType)
                 .socialId(oauth2UserInfo.getId())
-                .email(UUID.randomUUID() + "@socialUser.com")
-                .nickname(oauth2UserInfo.getNickname())
-                .imgUrl(oauth2UserInfo.getImgUrl())
+                .email(UUID.randomUUID() + "@socialUser.com") // Token 발행 용도
+                .name(oauth2UserInfo.getName())
+//                .imgUrl(oauth2UserInfo.getImgUrl())
                 .role(Role.GUEST)
                 .build();
     }

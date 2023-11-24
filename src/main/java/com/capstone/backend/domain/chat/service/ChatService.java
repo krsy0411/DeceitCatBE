@@ -28,7 +28,6 @@ public class ChatService {
 
     // 채팅방 찾기 (roomId)
     public ChatRoom findByRoomId(String roomId){
-
         return chatRoomMap.get(roomId);
     }
 
