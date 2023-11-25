@@ -79,7 +79,7 @@ public class OAuthAttributes {
                 .socialId(oauth2UserInfo.getId())
                 .email(UUID.randomUUID() + "@socialUser.com") // Token 발행 용도
                 .name(oauth2UserInfo.getName())
-                .role(Role.GUEST)
+                .role(Role.GUEST) // default role = GUEST
                 .build();
     }
 }

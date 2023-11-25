@@ -7,7 +7,6 @@ import com.capstone.backend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -38,7 +37,7 @@ public class UserService {
         Optional<User> optionalUser;
         if (socialId == null) { // email 값으로 유저 식별
             optionalUser = userRepository.findByEmail(email);
-        } else {
+        } else { // socialId 값으로 유저 식별
             optionalUser = userRepository.findBySocialId(socialId);
         }
 
