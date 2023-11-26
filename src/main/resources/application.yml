@@ -7,6 +7,13 @@ spring:
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
 
+  data:
+    mongodb:
+      username: admin
+      password: 20160524
+      uri: mongodb://localhost:8080
+      authentication-database: admin
+
   ### oAuth 2###
   security:
     oauth2:
@@ -15,7 +22,6 @@ spring:
           google:
             client-id: ${GOOGLE_ID}
             client-secret: ${GOOGLE_SECRET}
-            redirect-uri: https://ec2-43-202-161-139.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/google
             scope: profile, email
           naver:
             client-id: ${NAVER_ID}
