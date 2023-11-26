@@ -22,7 +22,7 @@ import java.io.IOException;
 
 /**
  * Jwt 인증 필터
- * "/login" 이외의 URI 요청이 왔을 때 처리하는 필터
+ * "/auth/login" 이외의 URI 요청이 왔을 때 처리하는 필터
  *
  * 기본적으로 사용자는 요청 헤더에 AccessToken만 담아서 요청
  * AccessToken 만료 시에만 RefreshToken을 요청 헤더에 AccessToken과 함께 요청

@@ -7,12 +7,12 @@ spring:
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
 
-  data:
-    mongodb:
-      username: admin
-      password: 20160524
-      uri: mongodb://localhost:8080
-      authentication-database: admin
+#  data:
+#    mongodb:
+#      username: admin
+#      password: 20160524
+#      uri: mongodb://localhost:8080
+#      authentication-database: admin
 
   ### oAuth 2###
   security:

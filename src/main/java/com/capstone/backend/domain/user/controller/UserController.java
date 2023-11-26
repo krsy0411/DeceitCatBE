@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/sign-up")
+    @PostMapping("/auth/join")
     public String singUp(@RequestBody UserSignUpDto userSignUpDto) throws Exception {
         userService.signUp(userSignUpDto);
         return "회원가입 성공";
     }
 
-    @PostMapping("/api/users/{email}/add-info")
+    @PostMapping("/auth/add-info")
     public ResponseEntity<String> setUserRole(@RequestParam(required = false) String email, @RequestParam(required = false) String socialId, @RequestParam Role role) {
         try {
             userService.addInfo(email, socialId, role);
@@ -29,8 +29,8 @@ public class UserController {
         }
     }
 
-    @GetMapping("/jwt-test")
-    public String jwtTest() {
+    @GetMapping("/auth/profile")
+    public String profile() {
         return "jwtTest 요청 성공";
     }
 }
