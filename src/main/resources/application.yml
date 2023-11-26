@@ -1,11 +1,8 @@
 spring:
-#  profiles:
-#    default: prod # RDS 기본 연결
-#    active: dev, prod
-
   ## RDS DB ###
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    tomcat:
+      driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
