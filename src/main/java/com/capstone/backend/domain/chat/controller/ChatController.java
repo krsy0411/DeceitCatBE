@@ -7,6 +7,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -17,6 +21,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.util.ArrayList;
@@ -54,8 +59,24 @@ public class ChatController {
     @MessageMapping("/chat/sendMessage")
     public void sendMessage(@Payload ChatDto chat) {
         log.info("CHAT {}", chat);
-        chat.setMessage(chat.getMessage());
+        String message = chat.getMessage();
+
+        boolean isHidden = checkMessage(message);
+        chat.setHidden(isHidden);
+
         template.convertAndSend("/sub/chat/room/" + chat.getRoomId(), chat);
+    }
+
+    @MessageMapping("/chat/checkMessage")
+    public boolean checkMessage(String message) {
+        String requestUrl = "43.202.161.139:8888/" + message;
+
+        HttpHeaders header = new HttpHeaders();
+        HttpEntity<String> entity = new HttpEntity<>(header);
+        ResponseEntity<Integer> responseEntity = new RestTemplate().exchange(
+                requestUrl, HttpMethod.GET, entity, Integer.class
+        );
+        return responseEntity.getBody() == 1;
     }
 
     // 유저 퇴장 시에는 EventListener 을 통해서 유저 퇴장을 확인
