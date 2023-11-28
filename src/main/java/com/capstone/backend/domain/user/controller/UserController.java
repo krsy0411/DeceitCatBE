@@ -2,7 +2,6 @@ package com.capstone.backend.domain.user.controller;
 
 import com.capstone.backend.domain.user.dto.UserSignUpDto;
 import com.capstone.backend.domain.user.entity.Role;
-import com.capstone.backend.domain.user.entity.User;
 import com.capstone.backend.domain.user.service.UserService;
 import com.capstone.backend.global.jwt.service.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;

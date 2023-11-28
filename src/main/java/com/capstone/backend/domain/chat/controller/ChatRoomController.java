@@ -1,11 +1,14 @@
 package com.capstone.backend.domain.chat.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +18,7 @@ import com.capstone.backend.domain.chat.service.ChatService;
 import com.capstone.backend.domain.chat.dto.ChatRoom;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RestController
@@ -25,25 +29,20 @@ public class ChatRoomController {
     @Autowired
     private ChatService chatService;
 
-    // 채팅방 생성
-    // 채팅방 생성 후 다시 /list 로 return
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Operation(summary = "채팅방 생성")
     @PostMapping("/create")
-    public String createRoom(@RequestParam String name, RedirectAttributes rttr) {
+    public ResponseEntity<String> createRoom(@RequestBody Map<String, String> requestBody, RedirectAttributes rttr) {
+        String name = requestBody.get("name");
         ChatRoom room = chatService.createChatRoom(name);
         log.info("CREATE ROOM {}", room);
         rttr.addFlashAttribute("roomName", room);
-        return "redirect:/room/list";
+
+        return ResponseEntity.ok(room.getRoomId());
     }
 
-    // 채팅 리스트 확인
-//    @Operation(summary = "채팅방 조회")
-//    @GetMapping("/list")
-//    public String roomList(Model model){
-//        model.addAttribute("list", chatService.findAllRoom());
-//        log.info("SHOW ALL RoomList {}", chatService.findAllRoom());
-//        return "roomList"; // 실제 view 파일 이름으로 수정 예정
-//    }
     @Operation(summary = "채팅방 조회")
     @GetMapping("/list")
     public ResponseEntity<List<ChatRoom>> roomList(Model model) {
@@ -57,21 +56,20 @@ public class ChatRoomController {
     // 채팅방을 찾아서 클라이언트를 chatroom 으로 보낸다.
     @Operation(summary = "채팅방 입장", description = "room Id와 일치하는 채팅방에 클라이언트를 입장시킴")
     @GetMapping("/{roomId}")
-    public String enterRoom(Model model, @PathVariable String roomId){
+    public ResponseEntity<String> enterRoom(@PathVariable String roomId){
         ChatRoom room = chatService.findByRoomId(roomId);
         if (room == null) {
             log.error("Room ID {} does not exist", roomId);
-            return "redirect:/error";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found");
         }
 
-        List<ChatRoom> allRooms = chatService.findAllRoom();
-        if (allRooms.isEmpty()) {
-            log.error("No rooms available");
-            return "redirect:/error";
+        try {
+            String roomInfoJson = objectMapper.writeValueAsString(room);
+            log.info("ENTER ROOM {}", room.getRoomName());
+            return ResponseEntity.ok(roomInfoJson);
+        } catch (JsonProcessingException e) {
+            log.error("Error converting room info to JSON", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error converting room info to JSON");
         }
-
-        log.info("ENTER ROOM {}", room.getRoomName());
-        model.addAttribute("room", room);
-        return "chatroom"; // 실제 view 파일 이름으로 수정 예정
     }
 }
