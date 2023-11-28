@@ -2,13 +2,22 @@ package com.capstone.backend.domain.user.controller;
 
 import com.capstone.backend.domain.user.dto.UserSignUpDto;
 import com.capstone.backend.domain.user.entity.Role;
+import com.capstone.backend.domain.user.entity.User;
 import com.capstone.backend.domain.user.service.UserService;
+import com.capstone.backend.global.jwt.service.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +40,25 @@ public class UserController {
             return ResponseEntity.ok("사용자 역할이 성공적으로 업데이트되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @Autowired
+    private JwtService jwtService;
+    @Operation(summary = "유저 정보 요청")
+    @GetMapping("/entry")
+    public ResponseEntity<?> getUserInfo(@RequestHeader(name="Authorization") String token) {
+        Optional<String> extractedEmail = jwtService.extractEmail(token);
+        Optional<String> extractedUsername = jwtService.extractUsername(token);
+
+        if (extractedEmail.isPresent() && extractedUsername.isPresent()) {
+            Map<String, String> userInfo = new HashMap<>();
+            userInfo.put("email", extractedEmail.get());
+            userInfo.put("username", extractedUsername.get());
+            return ResponseEntity.ok(userInfo);
+        } else {
+            // 이메일 또는 사용자 이름이 없거나 토큰이 유효하지 않은 경우에 대한 예외 처리
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰, 이메일 또는 사용자 이름이 없습니다.");
         }
     }
 }
