@@ -2,6 +2,7 @@ package com.capstone.backend.domain.chat.controller;
 
 import com.capstone.backend.domain.chat.dto.ChatDto;
 import com.capstone.backend.domain.chat.service.ChatService;
+import com.nimbusds.jose.shaded.json.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -61,22 +62,26 @@ public class ChatController {
         log.info("CHAT {}", chat);
         String message = chat.getMessage();
 
-        boolean isHidden = checkMessage(message);
-        chat.setHidden(isHidden);
+        chat.setHidden(checkMessage(message));
+        chat.setMessage(message);
 
+//        boolean isHidden = checkMessage(message);
+//        chat.setHidden(isHidden);
         template.convertAndSend("/sub/chat/room/" + chat.getRoomId(), chat);
     }
 
-    @MessageMapping("/chat/checkMessage")
+//    @MessageMapping("/chat/checkMessage")
     public boolean checkMessage(String message) {
         String requestUrl = "43.202.161.139:8888/" + message;
 
         HttpHeaders header = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>(header);
-        ResponseEntity<Integer> responseEntity = new RestTemplate().exchange(
-                requestUrl, HttpMethod.GET, entity, Integer.class
+        ResponseEntity<JSONObject> responseEntity = new RestTemplate().exchange(
+                requestUrl, HttpMethod.GET, entity, JSONObject.class
         );
-        return responseEntity.getBody() == 1;
+//        return responseEntity.getBody() == 1;
+        JSONObject j = new JSONObject(responseEntity.getBody());
+        return (Integer) ((ArrayList) j.get("model_result")).get(0) == 1;
     }
 
     // 유저 퇴장 시에는 EventListener 을 통해서 유저 퇴장을 확인

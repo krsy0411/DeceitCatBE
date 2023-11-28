@@ -49,6 +49,8 @@ public class SecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
 
+            .cors().and() // CORS 설정 추가
+
             .authorizeRequests()
 //                .antMatchers("/", "/v3/api-docs/**", "/api*", "/api-docs/**","/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**").permitAll()
 //                .anyRequest().authenticated() // 다른 모든 요청은 인증되어야 함
