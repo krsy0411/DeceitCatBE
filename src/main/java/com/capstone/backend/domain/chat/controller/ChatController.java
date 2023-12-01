@@ -84,9 +84,6 @@ public class ChatController {
         ChatDto responseBody = responseEntity.getBody();
         int[] modelResult = responseBody.getHidden();
 
-        // ChatDto에 hidden 필드 설정
-        chat.setHidden(modelResult);
-
         return modelResult != null && modelResult.length > 0 && modelResult[0] == 1;
     }
 
