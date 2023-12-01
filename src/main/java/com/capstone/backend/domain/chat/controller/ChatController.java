@@ -57,7 +57,7 @@ public class ChatController {
     }
 
     // send message
-    @MessageMapping("/pub/chat/message")
+    @MessageMapping("/chat/message")
     public void sendMessage(@Payload ChatDto chat) {
         log.info("CHAT {}", chat);
         String message = chat.getMessage();
@@ -68,7 +68,7 @@ public class ChatController {
         template.convertAndSend("/sub/chat/" + chat.getRoomId(), chat);
     }
 
-//    @MessageMapping("/pub/chat/checkMessage")
+//    @MessageMapping("/chat/checkMessage")
     public boolean checkMessage(String message) {
 //        String requestUrl = "43.202.161.139:8888/" + message;
         String requestUrl = "0.0.0.0:8888/" + message;
@@ -113,7 +113,7 @@ public class ChatController {
                     .message(username + " 님 퇴장!")
                     .build();
 
-            template.convertAndSend("/sub/chat/" + roomId, chat);
+            template.convertAndSend("/sub/chat/" + chat.getRoomId(), chat);
         }
     }
 
