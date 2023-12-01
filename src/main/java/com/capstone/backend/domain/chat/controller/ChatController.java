@@ -2,6 +2,7 @@ package com.capstone.backend.domain.chat.controller;
 
 import com.capstone.backend.domain.chat.dto.ChatDto;
 import com.capstone.backend.domain.chat.service.ChatService;
+import com.nimbusds.jose.shaded.json.JSONArray;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -56,31 +57,37 @@ public class ChatController {
         template.convertAndSend("/sub/chat/" + chat.getRoomId(), chat);
     }
 
-    // send message
     @MessageMapping("/chat/message")
     public void sendMessage(@Payload ChatDto chat) {
         log.info("CHAT {}", chat);
         String message = chat.getMessage();
 
-        chat.setHidden(checkMessage(message));
-//        chat.setMessage(message);
+        boolean isHidden = checkMessage(message);
+        chat.setHidden(new int[]{isHidden ? 1 : 0}); // hidden 값 설정
 
         template.convertAndSend("/sub/chat/" + chat.getRoomId(), chat);
     }
 
-//    @MessageMapping("/chat/checkMessage")
-    public boolean checkMessage(String message) {
-//        String requestUrl = "43.202.161.139:8888/" + message;
-        String requestUrl = "0.0.0.0:8888/" + message;
+    @MessageMapping("/chat/checkMessage")
+    public boolean checkMessage(@Payload String message) {
+        String baseUrl = "http://43.202.161.139:8888/";
+        String requestUrl = baseUrl + message;
 
         HttpHeaders header = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>(header);
-        ResponseEntity<JSONObject> responseEntity = new RestTemplate().exchange(
-                requestUrl, HttpMethod.GET, entity, JSONObject.class
+
+        ResponseEntity<ChatDto> responseEntity = new RestTemplate().exchange(
+                requestUrl, HttpMethod.GET, entity, ChatDto.class
         );
-//        return responseEntity.getBody() == 1;
-        JSONObject j = new JSONObject(responseEntity.getBody());
-        return (Integer) ((ArrayList) j.get("model_result")).get(0) == 1;
+
+        // Response에서 modelResult 가져오기
+        ChatDto responseBody = responseEntity.getBody();
+        int[] modelResult = responseBody.getHidden();
+
+        // ChatDto에 hidden 필드 설정
+        chat.setHidden(modelResult);
+
+        return modelResult != null && modelResult.length > 0 && modelResult[0] == 1;
     }
 
     // 유저 퇴장 시에는 EventListener 을 통해서 유저 퇴장을 확인
