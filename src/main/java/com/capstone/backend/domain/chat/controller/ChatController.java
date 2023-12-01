@@ -40,7 +40,7 @@ public class ChatController {
 
     // MessageMapping 을 통해 webSocket 로 들어오는 메시지를 발신
     // 클라이언트에서는 /pub/chat/message 로 요청하게 되고 이것을 controller 가 받아서 처리한다.
-    // 처리가 완료되면 /sub/chat/room/{roomId} 로 메시지가 전송된다.
+    // 처리가 완료되면 구독한 방인 /sub/chat/{roomId} 로 메시지가 전송된다.
     @MessageMapping("/chat/enterUser")
     public void enterUser(@Payload ChatDto chat, SimpMessageHeaderAccessor headerAccessor) {
         // 채팅방 유저 +1
@@ -53,7 +53,7 @@ public class ChatController {
         headerAccessor.getSessionAttributes().put("userUUID", userUUID);
         headerAccessor.getSessionAttributes().put("roomId", chat.getRoomId());
         chat.setMessage(chat.getSender() + " 님 입장!");
-        template.convertAndSend("/sub/chat/room/" + chat.getRoomId(), chat);
+        template.convertAndSend("/sub/chat/" + chat.getRoomId(), chat);
     }
 
     // send message
@@ -63,16 +63,15 @@ public class ChatController {
         String message = chat.getMessage();
 
         chat.setHidden(checkMessage(message));
-        chat.setMessage(message);
+//        chat.setMessage(message);
 
-//        boolean isHidden = checkMessage(message);
-//        chat.setHidden(isHidden);
-        template.convertAndSend("/sub/chat/room/" + chat.getRoomId(), chat);
+        template.convertAndSend("/sub/chat/" + chat.getRoomId(), chat);
     }
 
 //    @MessageMapping("/chat/checkMessage")
     public boolean checkMessage(String message) {
-        String requestUrl = "43.202.161.139:8888/" + message;
+//        String requestUrl = "43.202.161.139:8888/" + message;
+        String requestUrl = "0.0.0.0:8888/" + message;
 
         HttpHeaders header = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>(header);
@@ -114,7 +113,7 @@ public class ChatController {
                     .message(username + " 님 퇴장!")
                     .build();
 
-            template.convertAndSend("/sub/chat/room/" + roomId, chat);
+            template.convertAndSend("/sub/chat/" + roomId, chat);
         }
     }
 

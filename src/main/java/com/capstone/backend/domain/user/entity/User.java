@@ -1,6 +1,7 @@
 package com.capstone.backend.domain.user.entity;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -8,7 +9,9 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Builder
+@SuperBuilder
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "user_type")
 @Table(name = "USERS")
 @AllArgsConstructor
 public class User {
@@ -25,9 +28,6 @@ public class User {
 
     @Column
     private String password; // 비밀번호
-
-//    @Column
-//    private String imgUrl; // 프로필 이미지
 
     @Column
     @Enumerated(EnumType.STRING)

@@ -1,9 +1,11 @@
 package com.capstone.backend.domain.user.controller;
 
+import com.capstone.backend.domain.user.dto.UserAddInfoDto;
 import com.capstone.backend.domain.user.dto.UserSignUpDto;
 import com.capstone.backend.domain.user.entity.Role;
 import com.capstone.backend.domain.user.service.UserService;
 import com.capstone.backend.global.jwt.service.JwtService;
+import com.nimbusds.openid.connect.sdk.UserInfoRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -31,14 +33,34 @@ public class UserController {
 
     @Operation(summary = "추가정보 입력")
     @PostMapping("/auth/add-info")
-    public ResponseEntity<String> setUserRole(@RequestParam(required = false) String email, @RequestParam(required = false) String socialId, @RequestParam Role role) {
+    public ResponseEntity<String> addInfo(@RequestBody UserAddInfoDto userAddInfoDto, @RequestHeader("Authorization") String token) {
         try {
-            userService.addInfo(email, socialId, role);
-            return ResponseEntity.ok("사용자 역할이 성공적으로 업데이트되었습니다.");
+            userService.addInfo(userAddInfoDto,token);
+            return ResponseEntity.ok("사용자의 추가정보 입력 완료!");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+//    @PostMapping("/friend-request")
+//    public ResponseEntity<String> sendFriendRequest(@RequestParam Long childId, @RequestParam Long teacherId) {
+//        try {
+//            userService.sendFriendRequest(childId, teacherId);
+//            return ResponseEntity.ok("Friend request sent!");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//        }
+//    }
+//
+//    @PostMapping("/approve-friend-request")
+//    public ResponseEntity<String> approveFriendRequest(@RequestParam Long teacherId, @RequestParam Long childId, @RequestParam boolean approved) {
+//        try {
+//            userService.approveFriendRequest(teacherId, childId, approved);
+//            return ResponseEntity.ok("Friend request approved!");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//        }
+//    }
 
     @Autowired
     private JwtService jwtService;
