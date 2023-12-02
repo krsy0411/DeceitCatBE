@@ -3,7 +3,10 @@ package com.capstone.backend.global.jwt.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.capstone.backend.domain.user.entity.Role;
+import com.capstone.backend.domain.user.entity.User;
 import com.capstone.backend.domain.user.repository.UserRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -152,6 +155,23 @@ public class JwtService {
             log.error("액세스 토큰이 유효하지 않습니다.");
             return Optional.empty();
         }
+    }
+
+    public Optional<String> extractRole(String accessToken) {
+        try {
+            String userEmail = extractEmail(accessToken).orElse(null);
+
+            if (userEmail != null) {
+                Optional<User> userOptional = userRepository.findByEmail(userEmail);
+                if (userOptional.isPresent()) {
+                    User user = userOptional.get();
+                    return Optional.of(user.getRole().getKey());
+                }
+            }
+        } catch (Exception e) {
+            log.error("액세스 토큰이 유효하지 않거나 사용자 정보를 찾을 수 없습니다.");
+        }
+        return Optional.empty();
     }
 
     /**

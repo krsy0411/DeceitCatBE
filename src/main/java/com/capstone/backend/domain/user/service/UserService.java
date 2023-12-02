@@ -9,10 +9,6 @@ import com.capstone.backend.domain.user.dto.UserSignUpDto;
 import com.capstone.backend.domain.user.repository.UserRepository;
 import com.capstone.backend.global.jwt.service.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -72,6 +68,7 @@ public class UserService {
             throw new Exception("해당 이메일을 가진 사용자를 찾을 수 없습니다.");
         }
     }
+
     public User validateAccessTokenAndGetUser(String accessToken) throws Exception {
         if (jwtService.isTokenValid(accessToken)) {
             Optional<String> extractedEmail = jwtService.extractEmail(accessToken);

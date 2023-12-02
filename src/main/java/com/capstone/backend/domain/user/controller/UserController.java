@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -69,11 +70,12 @@ public class UserController {
     public ResponseEntity<?> getUserInfo(@RequestHeader(name="Authorization") String token) {
         Optional<String> extractedEmail = jwtService.extractEmail(token);
         Optional<String> extractedUsername = jwtService.extractUsername(token);
-
+        Optional<String> extractedRole = jwtService.extractRole(token);
         if (extractedEmail.isPresent() && extractedUsername.isPresent()) {
             Map<String, String> userInfo = new HashMap<>();
             userInfo.put("email", extractedEmail.get());
             userInfo.put("username", extractedUsername.get());
+            userInfo.put("role", extractedRole.get());
             return ResponseEntity.ok(userInfo);
         } else {
             // 이메일 또는 사용자 이름이 없거나 토큰이 유효하지 않은 경우에 대한 예외 처리
