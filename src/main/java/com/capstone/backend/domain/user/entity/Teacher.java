@@ -7,12 +7,19 @@ import javax.persistence.*;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 @Table(name = "TEACHERS")
 @AllArgsConstructor
 @Entity
 public class Teacher extends User {
+    public Teacher() {
+        super();
+    }
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column
     private String teacherSchool; // 선생님 학교
 
@@ -27,4 +34,16 @@ public class Teacher extends User {
 
     @OneToMany(mappedBy = "teacher")
     private List<Child> childs;
+
+    public void setTeacherSchool(String teacherSchool) {
+        this.teacherSchool = teacherSchool;
+    }
+
+    public void setTeacherClass(String teacherClass) {
+        this.teacherClass = teacherClass;
+    }
+
+    public void setManageNum(int manageNum) {
+        this.manageNum = manageNum;
+    }
 }

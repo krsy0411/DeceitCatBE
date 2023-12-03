@@ -2,8 +2,6 @@ package com.capstone.backend.domain.chat.controller;
 
 import com.capstone.backend.domain.chat.dto.ChatDto;
 import com.capstone.backend.domain.chat.service.ChatService;
-import com.nimbusds.jose.shaded.json.JSONArray;
-import com.nimbusds.jose.shaded.json.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -63,7 +60,7 @@ public class ChatController {
         String message = chat.getMessage();
 
         boolean isHidden = checkMessage(message);
-        chat.setHidden(new int[]{isHidden ? 1 : 0}); // hidden 값 설정
+        chat.setHidden(isHidden ? 1 : 0); // hidden 값 설정
 
         template.convertAndSend("/sub/chat/" + chat.getRoomId(), chat);
     }
@@ -73,18 +70,17 @@ public class ChatController {
         String baseUrl = "http://43.202.161.139:8888/";
         String requestUrl = baseUrl + message;
 
-        HttpHeaders header = new HttpHeaders();
-        HttpEntity<String> entity = new HttpEntity<>(header);
+        try {
+            ResponseEntity<Map> responseEntity = new RestTemplate().getForEntity(requestUrl, Map.class);
 
-        ResponseEntity<ChatDto> responseEntity = new RestTemplate().exchange(
-                requestUrl, HttpMethod.GET, entity, ChatDto.class
-        );
+            Map<String, Object> responseBody = responseEntity.getBody();
+            int modelResult = (int) ((List<?>) responseBody.get("model_result")).get(0);
 
-        // Response에서 modelResult 가져오기
-        ChatDto responseBody = responseEntity.getBody();
-        int[] modelResult = responseBody.getHidden();
-
-        return modelResult != null && modelResult.length > 0 && modelResult[0] == 1;
+            return modelResult == 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     // 유저 퇴장 시에는 EventListener 을 통해서 유저 퇴장을 확인

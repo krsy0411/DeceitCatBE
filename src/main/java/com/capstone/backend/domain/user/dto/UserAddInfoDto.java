@@ -14,4 +14,5 @@ public class UserAddInfoDto {
     private String childName;
     private String childSchool;
     private String childClass;
+    private String teacherName;
 }
