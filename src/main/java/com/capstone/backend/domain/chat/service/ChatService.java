@@ -2,105 +2,126 @@ package com.capstone.backend.domain.chat.service;
 
 import com.capstone.backend.domain.chat.dto.ChatRoom;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 
-@Repository
 @Slf4j
+@Service
 public class ChatService {
-    private Map<String, ChatRoom> chatRoomMap;
+    private final Map<String, ChatRoom> chatRoomMap;
 
-    @PostConstruct
-    public void init(){
-        chatRoomMap = new HashMap<>();
+    public ChatService() {
+        this.chatRoomMap = new HashMap<>();
     }
 
-    // 전체 채팅방 조회
-    public List<ChatRoom> findAllRoom(){
-        // 최근 순으로 채팅방 정렬 후 반환
-        List chatRooms = new ArrayList<>(chatRoomMap.values());
-        Collections.reverse(chatRooms);
-
-        return chatRooms;
-    }
-
-    // 채팅방 찾기 (roomId)
-    public ChatRoom findByRoomId(String roomId){
-        return chatRoomMap.get(roomId);
-    }
-
-    // 채팅방 생성 (roomName)
-    public ChatRoom createChatRoom(String roomName){
-        ChatRoom chatRoom = new ChatRoom().create(roomName);
-        // Hashmap에 채팅방 아이디와 만들어진 채팅방을 저장
-        chatRoomMap.put(chatRoom.getRoomId(), chatRoom);
+    /* 채팅방 생성 */
+    public ChatRoom createRoom(String roomName) {
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.setRoomId(UUID.randomUUID().toString());
+        chatRoom.setRoomName(roomName);
+        chatRoomMap.put(chatRoom.getRoomId(), chatRoom); // Hashmap 에 새로운 채팅방 저장
         return chatRoom;
     }
 
-    // 채팅방 인원 +1
-    public void increaseUser(String roomId){
-        ChatRoom chatRoom = chatRoomMap.get(roomId);
-        chatRoom.setUserCount(chatRoom.getUserCount()+1);
+    /* 채팅방 삭제 */
+    public void deleteRoom(String roomId) {
+        chatRoomMap.remove(roomId);
     }
 
-    // 채팅방 인원 -1
-    public void decreaseUser(String roomId){
+    /* 특정 유저 조회 */
+    public String getUserName(String roomId, String userUUID){
         ChatRoom chatRoom = chatRoomMap.get(roomId);
-        chatRoom.setUserCount(chatRoom.getUserCount()-1);
-    }
-
-    // 채팅방 유저 리스트에 유저 추가
-    public String addUser(String roomId, String userName){
-        ChatRoom chatRoom = chatRoomMap.get(roomId);
-        String userUUID = UUID.randomUUID().toString();
-        // 아이디 중복 확인 후 userList에 추가
-        chatRoom.getUserList().put(userUUID,userName);
-
-        return userUUID;
-    }
-
-    // 채팅방 유저 이름 중복 확인
-    public String isDuplicateName(String roomId,String username){
-        ChatRoom chatRoom = chatRoomMap.get(roomId);
-        String temp = username;
-
-        // 만약 username이 중복이라면 랜덤한 숫자를 붙여준다.
-        // 이 때 랜덤한 숫자를 붙였을때 getUserList 안에 있는 닉네임이라면 다시 랜덤한 숫자 붙이기
-        while(chatRoom.getUserList().containsValue(temp)){
-            int ranNum = (int)(Math.random() * 100) + 1;
-            temp = username+ranNum;
-        }
-
-        return temp;
-    }
-
-    // 채팅방 유저 리스트 삭제
-    public void deleteUser(String roomId,String userUUID){
-        ChatRoom chatRoom = chatRoomMap.get(roomId);
-        chatRoom.getUserList().remove(userUUID);
-    }
-
-    // 채팅방 userName 조회
-    public String getUserName(String roomId,String userUUID){
-        ChatRoom chatRoom = chatRoomMap.get(roomId);
-
         return chatRoom.getUserList().get(userUUID);
     }
 
-    // 채팅방 전체 userList 조회
+    /* 채팅방 인원수 조회 */
+    public int getUserCount(String roomId) {
+        ChatRoom chatRoom = chatRoomMap.get(roomId);
+        return (chatRoom != null) ? chatRoom.getUserCount() : 0;
+    }
+
+    /* 채팅방 내 모든 유저 조회 */
     public List<String> getUserList(String roomId){
         List<String> list = new ArrayList<>();
 
         ChatRoom chatRoom = chatRoomMap.get(roomId);
 
-        if (chatRoom != null) {
-            chatRoom.getUserList().forEach((key,value) -> list.add(value));
-        } else {
-            log.error("Room ID {} 채팅방이 존재하지 않습니다.", roomId);
+        if (chatRoom == null) {
+            log.error("해당하는 방이 존재하지 않습니다. roomId : {}", roomId);
+            return list;
         }
 
+        list.addAll(chatRoom.getUserList().values());
         return list;
+    }
+
+    /* 채팅방에 유저 추가 */
+    public String addUser(String roomId, String userName){
+        ChatRoom chatRoom = chatRoomMap.get(roomId);
+        if (chatRoom != null) {
+            String userUUID = UUID.randomUUID().toString();
+            chatRoom.getUserList().put(userUUID,userName); // 아이디 중복 확인 후 유저 추가
+            return userUUID;
+        }
+        return null;
+    }
+
+    /* 채팅방에서 해당 유저 삭제 */
+    public void removeUser(String roomId, String userUUID){
+        ChatRoom chatRoom = chatRoomMap.get(roomId);
+        if (chatRoom != null) {
+            chatRoom.getUserList().remove(userUUID);
+        }
+    }
+
+    // 전체 채팅방 리스트 조회
+    public List<ChatRoom> findAllRoom(){
+        // 최근 순으로 채팅방 정렬 후 반환
+        List<ChatRoom> chatRooms = new ArrayList<>(chatRoomMap.values());
+        Collections.reverse(chatRooms);
+        return chatRooms;
+    }
+
+    /* roomId 로 채팅방 찾기 */
+//    public ChatRoom findByRoomId(String roomId){
+//        return chatRoomMap.get(roomId);
+//    }
+
+    /* AI 문제 소지의 발언 검출 */
+    public boolean checkMessage(@Payload String message) {
+//        String baseUrl = "http://43.202.161.139:8888/";
+        String baseUrl = "http://localhost:8888/";
+        String requestUrl = baseUrl + message;
+
+        try {
+            // 비동기 방식으로 HTTP 요청을 수행
+            WebClient webClient = WebClient.create();
+            Mono<ResponseEntity<Map>> response = webClient.get().uri(requestUrl).retrieve().toEntity(Map.class);
+
+            // HTTP 요청의 응답을 기다려 동기적으로 처리
+            ResponseEntity<Map> responseEntity = response.block();
+
+            // 응답에서 바디 추출
+            Map<String, Object> responseBody = responseEntity.getBody();
+
+            if (responseBody != null) {
+                List<?> modelResultList = (List<?>) responseBody.get("model_result");
+                int modelResult = (int) modelResultList.get(0); // 모델 결과 확인
+
+                // 응답이 1인지 여부 반환
+                return modelResult == 1;
+            } else {
+                // API 응답이 비어있는 경우 처리 로직 추가
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

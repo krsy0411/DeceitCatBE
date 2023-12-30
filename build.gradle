@@ -38,7 +38,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'// RDS 연동
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter'
-	runtimeOnly 'com.mysql:mysql-connector-j' // RDS 연동
+    implementation 'org.jetbrains:annotations:24.0.0'
+    runtimeOnly 'com.mysql:mysql-connector-j' // RDS 연동z
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -46,6 +47,7 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11' // Swagger
 	implementation 'org.springframework.boot:spring-boot-starter-websocket' // 웹 소켓 설정
+	implementation 'org.springframework.boot:spring-boot-starter-webflux' // WebClient
 }
 
 //tasks.named('test') {
