@@ -4,11 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 @Table(name = "MANAGES")
-@AllArgsConstructor
 @Entity
 public class Manage {
     @Id

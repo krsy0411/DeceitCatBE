@@ -73,13 +73,13 @@ public class OAuthAttributes {
      * email에는 UUID로 중복 없는 랜덤 값 생성
      * role은 GUEST로 설정
      */
-    public User toEntity(SocialType socialType, OAuth2UserInfo oauth2UserInfo) {
-        return User.builder()
-                .socialType(socialType)
-                .socialId(oauth2UserInfo.getId())
-                .email(UUID.randomUUID() + "@socialUser.com") // Token 발행 용도
-                .name(oauth2UserInfo.getName())
-                .role(Role.GUEST) // default role = GUEST
-                .build();
-    }
+//    public User toEntity(SocialType socialType, OAuth2UserInfo oauth2UserInfo) {
+//        return User.builder()
+//                .socialType(socialType)
+//                .socialId(oauth2UserInfo.getId())
+//                .email(UUID.randomUUID() + "@socialUser.com") // Token 발행 용도
+//                .name(oauth2UserInfo.getName())
+//                .role(Role.GUEST) // default role = GUEST
+//                .build();
+//    }
 }

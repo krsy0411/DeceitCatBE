@@ -1,11 +1,8 @@
 package com.capstone.backend.domain.user.controller;
 
-import com.capstone.backend.domain.user.dto.UserAddInfoDto;
-import com.capstone.backend.domain.user.dto.UserSignUpDto;
-import com.capstone.backend.domain.user.entity.Role;
+import com.capstone.backend.domain.user.dto.UserDto;
 import com.capstone.backend.domain.user.service.UserService;
 import com.capstone.backend.global.jwt.service.JwtService;
-import com.nimbusds.openid.connect.sdk.UserInfoRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -27,21 +23,21 @@ public class UserController {
 
     @Operation(summary = "회원가입")
     @PostMapping("/auth/sign-up")
-    public String singUp(@RequestBody UserSignUpDto userSignUpDto) throws Exception {
-        userService.signUp(userSignUpDto);
+    public String singUp(@RequestBody UserDto userSignUpDto) throws Exception {
+//        userService.signUp(userSignUpDto);
         return "회원가입 성공";
     }
 
-    @Operation(summary = "추가정보 입력")
-    @PostMapping("/auth/add-info")
-    public ResponseEntity<String> addInfo(@RequestBody UserAddInfoDto userAddInfoDto, @RequestHeader("Authorization") String token) {
-        try {
-            userService.addInfo(userAddInfoDto,token);
-            return ResponseEntity.ok("사용자의 추가정보 입력 완료!");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
+//    @Operation(summary = "추가정보 입력")
+//    @PostMapping("/auth/add-info")
+//    public ResponseEntity<String> addInfo(@RequestBody UserAddInfoDto userAddInfoDto, @RequestHeader("Authorization") String token) {
+//        try {
+//            userService.addInfo(userAddInfoDto,token);
+//            return ResponseEntity.ok("사용자의 추가정보 입력 완료!");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//        }
+//    }
 
 //    @PostMapping("/friend-request")
 //    public ResponseEntity<String> sendFriendRequest(@RequestParam Long childId, @RequestParam Long teacherId) {

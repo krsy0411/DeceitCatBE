@@ -4,16 +4,14 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+
 @Table(name = "CHILDS")
-@AllArgsConstructor
 @Entity
+@Getter
+@Setter
 public class Child {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "child_id")
     private Long id;
 
     @ManyToOne
@@ -24,9 +22,6 @@ public class Child {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @Column(name = "teacher_name")
-    private String teacherName; // 선생님 이름
-
     @Column
     private String childName; // 자녀 이름
 
@@ -35,4 +30,7 @@ public class Child {
 
     @Column
     private String childClass; // 자녀 반
+
+//    @Column(name = "teacher_name")
+//    private String teacherName; // 선생님 이름
 }
