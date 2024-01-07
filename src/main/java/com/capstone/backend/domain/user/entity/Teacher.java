@@ -1,12 +1,6 @@
 package com.capstone.backend.domain.user.entity;
 
-import com.capstone.backend.domain.user.entity.Child;
-import com.capstone.backend.domain.user.entity.Manage;
-import com.capstone.backend.domain.user.entity.Role;
-import com.capstone.backend.domain.user.entity.User;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.security.core.parameters.P;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,6 +10,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,9 +32,11 @@ public class Teacher {
     @ManyToMany
     private List<Parent> manageParents; // 학생 부모님 목록
 
-    public void setUser(User user) {
+    public Teacher(User user, String teacherSchool, String teacherClass) {
         this.user = user;
-        user.setRole(Role.TEACHER);
+        this.user.setRole(Role.TEACHER);
+        this.teacherSchool = teacherSchool;
+        this.teacherClass = teacherClass;
     }
 
     public void addManageParent(Parent parent) {

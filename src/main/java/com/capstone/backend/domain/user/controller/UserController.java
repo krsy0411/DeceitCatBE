@@ -23,21 +23,21 @@ public class UserController {
 
     @Operation(summary = "회원가입")
     @PostMapping("/auth/sign-up")
-    public String singUp(@RequestBody UserDto userSignUpDto) throws Exception {
-//        userService.signUp(userSignUpDto);
+    public String singUp(@RequestBody UserDto userDto) throws Exception {
+        userService.signUp(userDto);
         return "회원가입 성공";
     }
 
-//    @Operation(summary = "추가정보 입력")
-//    @PostMapping("/auth/add-info")
-//    public ResponseEntity<String> addInfo(@RequestBody UserAddInfoDto userAddInfoDto, @RequestHeader("Authorization") String token) {
-//        try {
-//            userService.addInfo(userAddInfoDto,token);
-//            return ResponseEntity.ok("사용자의 추가정보 입력 완료!");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-//        }
-//    }
+    @Operation(summary = "추가정보 입력")
+    @PostMapping("/auth/add-info")
+    public ResponseEntity<String> addInfo(@RequestBody UserDto userDto, @RequestHeader("Authorization") String token) {
+        try {
+            userService.addInfo(userDto,token);
+            return ResponseEntity.ok("사용자의 추가정보 입력 완료!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 
 //    @PostMapping("/friend-request")
 //    public ResponseEntity<String> sendFriendRequest(@RequestParam Long childId, @RequestParam Long teacherId) {
@@ -59,23 +59,23 @@ public class UserController {
 //        }
 //    }
 
-    @Autowired
-    private JwtService jwtService;
-    @Operation(summary = "유저 정보 요청")
-    @GetMapping("/entry")
-    public ResponseEntity<?> getUserInfo(@RequestHeader(name="Authorization") String token) {
-        Optional<String> extractedEmail = jwtService.extractEmail(token);
-        Optional<String> extractedUsername = jwtService.extractUsername(token);
-        Optional<String> extractedRole = jwtService.extractRole(token);
-        if (extractedEmail.isPresent() && extractedUsername.isPresent()) {
-            Map<String, String> userInfo = new HashMap<>();
-            userInfo.put("email", extractedEmail.get());
-            userInfo.put("username", extractedUsername.get());
-            userInfo.put("role", extractedRole.get());
-            return ResponseEntity.ok(userInfo);
-        } else {
-            // 이메일 또는 사용자 이름이 없거나 토큰이 유효하지 않은 경우에 대한 예외 처리
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰, 이메일 또는 사용자 이름이 없습니다.");
-        }
-    }
+//    @Autowired
+//    private JwtService jwtService;
+//    @Operation(summary = "유저 정보 요청")
+//    @GetMapping("/entry")
+//    public ResponseEntity<?> getUserInfo(@RequestHeader(name="Authorization") String token) {
+//        Optional<String> extractedEmail = jwtService.extractEmail(token);
+//        Optional<String> extractedUsername = jwtService.extractUsername(token);
+//        Optional<String> extractedRole = jwtService.extractRole(token);
+//        if (extractedEmail.isPresent() && extractedUsername.isPresent()) {
+//            Map<String, String> userInfo = new HashMap<>();
+//            userInfo.put("email", extractedEmail.get());
+//            userInfo.put("username", extractedUsername.get());
+//            userInfo.put("role", extractedRole.get());
+//            return ResponseEntity.ok(userInfo);
+//        } else {
+//            // 이메일 또는 사용자 이름이 없거나 토큰이 유효하지 않은 경우에 대한 예외 처리
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰, 이메일 또는 사용자 이름이 없습니다.");
+//        }
+//    }
 }
