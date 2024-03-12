@@ -43,31 +43,36 @@ public class UserService {
     }
 
     public void addInfo(UserDto userDto, String accessToken) throws Exception {
-        User user = validateAccessTokenAndGetUser(accessToken);
+        try {
+            User user = validateAccessTokenAndGetUser(accessToken);
 
-        if (user.getRole() == Role.GUEST) {
-            if (userDto.getRole() == Role.PARENT) { // role == PARENT
-                Parent parent = new Parent(user, userDto.getChildNum());
-                parentRepository.save(parent);
+            if (user.getRole() == Role.GUEST) {
+                if (userDto.getRole() == Role.PARENT) { // role == PARENT
+                    Parent parent = new Parent(user, userDto.getChildNum());
+                    parentRepository.save(parent);
 
-                user.setRole(Role.PARENT);
-                userRepository.save(user);
-            } else if (userDto.getRole() == Role.TEACHER) { // role == TEACHER
-                Teacher teacher = new Teacher(
-                        user,
-                        userDto.getTeacherSchool(),
-                        userDto.getTeacherClass()
-                );
-                teacherRepository.save(teacher);
+                    user.setRole(Role.PARENT);
+                    userRepository.save(user);
+                } else if (userDto.getRole() == Role.TEACHER) { // role == TEACHER
+                    Teacher teacher = new Teacher(
+                            user,
+                            userDto.getTeacherSchool(),
+                            userDto.getTeacherClass()
+                    );
+                    teacherRepository.save(teacher);
 
-                user.setRole(Role.TEACHER);
-                userRepository.save(user);
+                    user.setRole(Role.TEACHER);
+                    userRepository.save(user);
+                } else {
+                    throw new Exception("이미 유저 구분이 설정되었습니다.");
+                }
+
             } else {
-                throw new Exception("이미 유저 구분이 설정되었습니다.");
+                throw new Exception("해당 이메일을 가진 사용자를 찾을 수 없습니다.");
             }
-
-        } else {
-            throw new Exception("해당 이메일을 가진 사용자를 찾을 수 없습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 
