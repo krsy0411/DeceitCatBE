@@ -50,10 +50,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux' // WebClient
 }
 
-//tasks.named('test') {
-//	useJUnitPlatform()
-//}
-
 jar {
 	enabled = false
 }

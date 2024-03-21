@@ -46,7 +46,7 @@ public class ChatController {
         template.convertAndSend("/sub/chat/" + chat.getRoomId(), enterMessage);
     }
 
-    /* /sub/chat/{roomId} 구독한 클라이언트에게 메세지 publish */
+    /* /sub/chat/{chatId} 구독한 클라이언트에게 메세지 publish */
     @MessageMapping("/chat/message")
     public void sendMessage(@Payload ChatDto chat) {
         log.debug("서버에서 메세지 분석 중..."); // 서버로의 송신 OK
