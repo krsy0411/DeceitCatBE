@@ -60,6 +60,7 @@ public class ChatController {
         template.convertAndSend("/sub/chat/" + chat.getRoomId(), chat); // 메세지 발행
     }
 
+
     /* 클라이언트가 채탕방을 나갈 때 */
     @EventListener
     public void webSocketDisconnectListener(SessionDisconnectEvent event) {
