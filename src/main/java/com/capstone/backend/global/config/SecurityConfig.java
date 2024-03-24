@@ -1,6 +1,7 @@
 package com.capstone.backend.global.config;
 
 import com.capstone.backend.domain.user.repository.UserRepository;
+import com.capstone.backend.domain.user.service.UserService;
 import com.capstone.backend.global.jwt.filter.JwtAuthenticationProcessingFilter;
 import com.capstone.backend.global.jwt.service.JwtService;
 import com.capstone.backend.global.login.filter.CustomJsonUsernamePasswordAuthenticationFilter;
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -40,26 +42,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .formLogin().disable() // formLogin 사용 X
-                .httpBasic().disable()
-                .csrf().disable()
-                .headers().frameOptions().disable()
-                .and()
+            .formLogin().disable() // formLogin 사용 X
+            .httpBasic().disable()
+            .csrf().disable()
+            .headers().frameOptions().disable()
+            .and()
 
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
 
-                .cors().and() // CORS 설정 추가
+            .cors().and() // CORS 설정 추가
 
-                .authorizeRequests()
-                .anyRequest().permitAll()
-                .and()
+            .authorizeRequests()
+            .anyRequest().permitAll()
+            .and()
 
-                // 소셜 로그인 설정
-                .oauth2Login()
-                .successHandler(oAuth2LoginSuccessHandler) // 동의하고 계속하기를 눌렀을 때 핸들러
-                .failureHandler(oAuth2LoginFailureHandler) // 소셜 로그인 실패 시 핸들러
-                .userInfoEndpoint().userService(customOAuth2UserService); // customUserService 설정
+            // 소셜 로그인 설정
+            .oauth2Login()
+            .successHandler(oAuth2LoginSuccessHandler) // 동의하고 계속하기를 눌렀을 때 핸들러
+            .failureHandler(oAuth2LoginFailureHandler) // 소셜 로그인 실패 시 핸들러
+            .userInfoEndpoint().userService(customOAuth2UserService); // customUserService 설정
 
         http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
         http.addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class);

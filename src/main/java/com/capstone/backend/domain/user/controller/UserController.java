@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "유저 관리", description = "회원가입, 추가정보 입력")
+@Tag(name = "유저 관리", description = "회원가입,로그인, 추가정보 입력, 로그인 통계 조회, 전체 사용자 수 조회")
 public class UserController {
     private final UserService userService;
 
@@ -32,12 +32,59 @@ public class UserController {
     @PostMapping("/auth/add-info")
     public ResponseEntity<String> addInfo(@RequestBody UserDto userDto, @RequestHeader("Authorization") String token) {
         try {
-            userService.addInfo(userDto,token);
+            userService.addInfo(userDto, token);
             return ResponseEntity.ok("사용자의 추가정보 입력 완료!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    /**
+     * 사용자 로그인을 처리
+     *
+     * @param userDto 사용자 로그인 정보를 담고 있는 DTO
+     * @return 로그인 성공 여부 및 관련 정보 ( refresh token, access token )
+     */
+    @Operation(summary = "로그인")
+    @PostMapping("/auth/sign-in")
+    public ResponseEntity<Map<String, Object>> login(@RequestBody UserDto userDto) {
+        return ResponseEntity.ok(userService.loginUser(userDto.getEmail(), userDto.getPassword()));
+    }
+
+    /**
+     * 특정 사용자의 주간별 로그인 횟수를 조회
+     *
+     * @param userId 로그인 횟수를 조회할 사용자의 ID
+     * @return 특정 사용자의 주간별 로그인 횟수
+     */
+    @Operation(summary = "특정 사용자의 주간별 로그인 횟수 조회")
+    @GetMapping("/auth/{userId}/weekly-logins")
+    public ResponseEntity<Long> getUserWeeklyLoginCount(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getUserWeeklyLoginCount(userId));
+    }
+
+    /**
+     * 전체 사용자의 주간별 로그인 횟수를 조회
+     *
+     * @return 전체 사용자의 주간별 로그인 횟수
+     */
+    @Operation(summary = "전체 사용자의 주간별 로그인 횟수 조회")
+    @GetMapping("/auth/weekly-logins")
+    public ResponseEntity<Long> getTotalWeeklyLoginCount() {
+        return ResponseEntity.ok(userService.getTotalWeeklyLoginCount());
+    }
+
+    /**
+     * 시스템에 등록된 전체 사용자 수를 조회
+     *
+     * @return 시스템에 등록된 전체 사용자 수
+     */
+    @Operation(summary = "전체 사용자수 조회")
+    @GetMapping("/auth/total-users")
+    public ResponseEntity<Long> getTotalUserCount() {
+        return ResponseEntity.ok(userService.getTotalUserCount());
+    }
+
 
 //    @PostMapping("/friend-request")
 //    public ResponseEntity<String> sendFriendRequest(@RequestParam Long childId, @RequestParam Long teacherId) {

@@ -3,10 +3,12 @@ package com.capstone.backend.global.login.handler;
 
 import com.capstone.backend.domain.user.entity.User;
 import com.capstone.backend.domain.user.repository.UserRepository;
+import com.capstone.backend.domain.user.service.UserService;
 import com.capstone.backend.global.jwt.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +23,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
+
 
     @Value("${jwt.access.expiration}")
     private String accessTokenExpiration;
