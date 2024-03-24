@@ -85,7 +85,6 @@ public class UserController {
         return ResponseEntity.ok(userService.getTotalUserCount());
     }
 
-
 //    @PostMapping("/friend-request")
 //    public ResponseEntity<String> sendFriendRequest(@RequestParam Long childId, @RequestParam Long teacherId) {
 //        try {
