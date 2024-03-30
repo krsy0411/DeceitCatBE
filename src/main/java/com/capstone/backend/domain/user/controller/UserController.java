@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,12 +44,15 @@ public class UserController {
      * 사용자 로그인을 처리
      *
      * @param userDto 사용자 로그인 정보를 담고 있는 DTO
-     * @return 로그인 성공 여부 및 관련 정보 ( refresh token, access token )
+     * @return 로그인 성공 여부 및 관련 정보 ( access token )
      */
     @Operation(summary = "로그인")
     @PostMapping("/auth/sign-in")
     public ResponseEntity<Map<String, Object>> login(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok(userService.loginUser(userDto.getEmail(), userDto.getPassword()));
+        Map<String, Object> tokens = userService.loginUser(userDto.getEmail(), userDto.getPassword());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, (String)tokens.get("accessToken"))
+                .body(null);
     }
 
     /**
