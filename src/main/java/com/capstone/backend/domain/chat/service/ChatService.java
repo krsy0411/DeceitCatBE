@@ -94,8 +94,8 @@ public class ChatService {
 
     /* AI 문제 소지의 발언 검출 */
     public boolean checkMessage(@Payload String message) {
-//        String baseUrl = "http://43.202.161.139:8888/";
-        String baseUrl = "http://localhost:8888/";
+        String baseUrl = "http://13.124.97.155:8888/";
+//        String baseUrl = "http://localhost:8888/";
         String requestUrl = baseUrl + message;
 
         try {
