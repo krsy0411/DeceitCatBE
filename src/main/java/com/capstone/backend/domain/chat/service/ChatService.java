@@ -113,7 +113,7 @@ public class ChatService {
 //                List<?> modelResultList = (List<?>) responseBody.get("model_result");
 //                int modelResult = (int) modelResultList.get(0); // 모델 결과 확인
 
-                Integer modelResult = (Integer) responseBody.get("model_result");
+                int modelResult = (int) responseBody.get("model_result");
 
                 // 응답이 1인지 여부 반환
                 return modelResult == 1;
