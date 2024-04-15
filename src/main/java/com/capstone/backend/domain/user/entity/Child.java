@@ -1,5 +1,6 @@
 package com.capstone.backend.domain.user.entity;
 
+import com.capstone.backend.domain.user.dto.ChildDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,4 +34,18 @@ public class Child {
 
 //    @Column(name = "teacher_name")
 //    private String teacherName; // 선생님 이름
+
+    public Child(Parent parent, ChildDto dto) {
+        this.childName = dto.getChildName();
+        this.childSchool = dto.getChildSchool();
+        this.childClass = dto.getChildClass();
+        this.parent = parent;
+    }
+
+    public Child(Teacher teacher, ChildDto dto) {
+        this.childName = dto.getChildName();
+        this.childSchool = dto.getChildSchool();
+        this.childClass = dto.getChildClass();
+        this.teacher = teacher;
+    }
 }

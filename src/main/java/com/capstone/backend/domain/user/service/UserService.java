@@ -1,7 +1,9 @@
 package com.capstone.backend.domain.user.service;
 
+import com.capstone.backend.domain.user.dto.ChildDto;
 import com.capstone.backend.domain.user.dto.UserDto;
 import com.capstone.backend.domain.user.entity.*;
+import com.capstone.backend.domain.user.repository.ChildRepository;
 import com.capstone.backend.domain.user.repository.ParentRepository;
 import com.capstone.backend.domain.user.repository.TeacherRepository;
 import com.capstone.backend.domain.user.repository.UserLoginCountRepository;
@@ -25,6 +27,7 @@ import java.util.*;
 public class UserService {
     private final UserRepository userRepository;
     private final ParentRepository parentRepository;
+    private final ChildRepository childRepository;
     private final TeacherRepository teacherRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -56,6 +59,12 @@ public class UserService {
             if (user.getRole() == Role.GUEST) {
                 if (userDto.getRole() == Role.PARENT) { // role == PARENT
                     Parent parent = new Parent(user, userDto.getChildNum());
+
+                    for (ChildDto dto : userDto.getChildren()) {
+                        Child child = new Child(parent, dto);
+                        childRepository.save(child);
+                    }
+
                     parentRepository.save(parent);
 
                     user.setRole(Role.PARENT);
@@ -66,6 +75,12 @@ public class UserService {
                             userDto.getTeacherSchool(),
                             userDto.getTeacherClass()
                     );
+
+                    for (ChildDto dto : userDto.getChildren()) {
+                        Child child = new Child(teacher, dto);
+                        childRepository.save(child);
+                    }
+
                     teacherRepository.save(teacher);
 
                     user.setRole(Role.TEACHER);
