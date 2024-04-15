@@ -1,5 +1,6 @@
 package com.capstone.backend.domain.user.service;
 
+import com.capstone.backend.domain.notification.service.NotificationService;
 import com.capstone.backend.domain.user.dto.ChildDto;
 import com.capstone.backend.domain.user.dto.UserDto;
 import com.capstone.backend.domain.user.entity.*;
@@ -15,6 +16,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -31,7 +33,7 @@ public class UserService {
     private final TeacherRepository teacherRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-
+    private final NotificationService notificationService;
     private final UserLoginCountRepository userLoginCountRepository;
 
     private static final String USER_NOT_FOUND_MESSAGE = "해당 사용자를 찾을 수 없습니다: ";
@@ -77,6 +79,10 @@ public class UserService {
 
                     user.setRole(Role.PARENT);
                     userRepository.save(user);
+
+                    /* 부모의 자식 정보와 일치하는 선생님을 찾아 친구 추가 요청 알림 보내기*/
+                    followRequest(parent);
+
                 } else if (userDto.getRole() == Role.TEACHER) { // role == TEACHER
                     Teacher teacher = new Teacher(
                             user,
@@ -84,21 +90,18 @@ public class UserService {
                             userDto.getTeacherClass()
                     );
 
-//                    for (ChildDto dto : userDto.getChildren()) {
-//                        Child child = new Child(teacher, dto);
-//                        childRepository.save(child);
-//                    }
-
                     teacherRepository.save(teacher);
 
                     user.setRole(Role.TEACHER);
                     userRepository.save(user);
+
+                    /* Teacher 정보 저장 후 SSE 구독 시작 */
+                    startSSESubscriptionForTeacher(teacher);
                 } else {
                     throw new Exception("이미 유저 구분이 설정되었습니다.");
                 }
-
             } else {
-                throw new Exception("[add-info]해당 이메일을 가진 사용자를 찾을 수 없습니다.");
+                throw new Exception("해당 이메일을 가진 사용자를 찾을 수 없습니다.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,7 +115,7 @@ public class UserService {
             if (extractedEmail.isPresent()) {
                 // 여기서 userRepository.findByEmail()을 통해 사용자를 찾고 반환합니다.
                 return userRepository.findByEmail(extractedEmail.get())
-                        .orElseThrow(() -> new Exception("[validate] 해당 이메일을 가진 사용자를 찾을 수 없습니다."));
+                        .orElseThrow(() -> new Exception("해당 이메일을 가진 사용자를 찾을 수 없습니다."));
             } else {
                 throw new Exception("토큰에서 이메일을 추출할 수 없습니다.");
             }
@@ -121,6 +124,30 @@ public class UserService {
         }
     }
 
+    public void followRequest(Parent parent) {
+        List<Child> children = parent.getChildren();
+
+        for (Child child : children) {
+            Teacher teacher = teacherRepository.findByTeacherSchoolAndTeacherClass(child.getChildSchool(), child.getChildClass());
+
+            if (teacher != null && teacher.getTeacherName().equals(child.getTeacherName())) {
+                Long teacherUserId = teacher.getUser().getId();
+                if (teacherUserId == null) {
+                    // teacher의 userId가 null이면 예외 상황으로 간주하여 로그를 출력합니다.
+                    System.out.println("teacher의 userId가 null입니다. teacher: " + teacher);
+                } else {
+                    System.out.println("teacher의 userId: " + teacherUserId);
+                    // 부모와 선생님 사이의 친구 추가 요청 알림을 보냅니다.
+//                notificationService.followRequest(parent.getUser(), teacher.getUser());
+                    notificationService.notify(teacherUserId, "친구 추가 요청: " + parent.getUser().getName());
+                }
+            }
+        }
+    }
+
+    public void startSSESubscriptionForTeacher(Teacher teacher) {
+        notificationService.startSSESubscriptionForTeacher(teacher);
+    }
 
     public Map<String, Object> loginUser(String email, String password) {
 

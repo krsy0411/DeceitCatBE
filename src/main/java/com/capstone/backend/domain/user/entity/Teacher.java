@@ -39,6 +39,10 @@ public class Teacher {
         this.teacherClass = teacherClass;
     }
 
+    public String getTeacherName() {
+        return this.user.getName();
+    }
+
     public void addManageParent(Parent parent) {
         if (manageParents == null) {
             manageParents = new ArrayList<>();

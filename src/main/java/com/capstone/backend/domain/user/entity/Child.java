@@ -32,20 +32,25 @@ public class Child {
     @Column
     private String childClass; // 자녀 반
 
-//    @Column(name = "teacher_name")
-//    private String teacherName; // 선생님 이름
+    @Column
+    private String teacherName; // 선생님 이름
 
     public Child(Parent parent, ChildDto dto) {
         this.childName = dto.getChildName();
         this.childSchool = dto.getChildSchool();
         this.childClass = dto.getChildClass();
+        this.teacherName = dto.getTeacherName();
         this.parent = parent;
     }
+//
+//    public Child(Teacher teacher, ChildDto dto) {
+//        this.childName = dto.getChildName();
+//        this.childSchool = dto.getChildSchool();
+//        this.childClass = dto.getChildClass();
+//        this.teacher = teacher;
+//    }
 
-    public Child(Teacher teacher, ChildDto dto) {
-        this.childName = dto.getChildName();
-        this.childSchool = dto.getChildSchool();
-        this.childClass = dto.getChildClass();
-        this.teacher = teacher;
+    public String getTeacherName() {
+        return teacherName;
     }
 }

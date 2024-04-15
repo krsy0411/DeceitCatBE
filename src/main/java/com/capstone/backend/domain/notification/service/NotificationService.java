@@ -1,18 +1,22 @@
 package com.capstone.backend.domain.notification.service;
 
 import com.capstone.backend.domain.notification.repository.EmitterRepository;
+import com.capstone.backend.domain.user.entity.Teacher;
+import com.capstone.backend.domain.user.entity.User;
+import com.capstone.backend.domain.user.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class NotificationService {
     // 기본 타임아웃 설정
     private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
-
     private final EmitterRepository emitterRepository;
 
     /**
@@ -74,4 +78,28 @@ public class NotificationService {
 
         return emitter;
     }
+
+    public void followRequest(User parentUser, User teacherUser) {
+        SseEmitter parentEmitter = emitterRepository.get(parentUser.getId());
+        SseEmitter teacherEmitter = emitterRepository.get(teacherUser.getId());
+
+        if (parentEmitter != null && teacherEmitter != null) {
+            try {
+                parentEmitter.send("친구 추가 요청: " + teacherUser.getName());
+                teacherEmitter.send("친구 요청 도착: " + parentUser.getName());
+            } catch (IOException e) {
+                // 예외 처리
+            }
+        }
+    }
+
+    public void startSSESubscriptionForTeacher(Teacher teacher) {
+        Long teacherId = teacher.getUser().getId();
+        subscribe(teacherId);
+    }
+
+    public void removeEmitter(Long userId) {
+        emitterRepository.deleteById(userId);
+    }
+
 }
