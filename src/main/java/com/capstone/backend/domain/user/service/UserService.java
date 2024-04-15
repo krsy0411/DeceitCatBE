@@ -54,9 +54,17 @@ public class UserService {
 
     public void addInfo(UserDto userDto, String accessToken) throws Exception {
         try {
+            if (userDto == null) {
+                throw new IllegalArgumentException("사용자 정보가 null입니다.");
+            }
+
             User user = validateAccessTokenAndGetUser(accessToken);
 
             if (user.getRole() == Role.GUEST) {
+                if (userDto.getRole() == null) {
+                    throw new IllegalArgumentException("사용자 역할 정보가 null입니다.");
+                }
+
                 if (userDto.getRole() == Role.PARENT) { // role == PARENT
                     Parent parent = new Parent(user, userDto.getChildNum());
 
@@ -76,10 +84,10 @@ public class UserService {
                             userDto.getTeacherClass()
                     );
 
-                    for (ChildDto dto : userDto.getChildren()) {
-                        Child child = new Child(teacher, dto);
-                        childRepository.save(child);
-                    }
+//                    for (ChildDto dto : userDto.getChildren()) {
+//                        Child child = new Child(teacher, dto);
+//                        childRepository.save(child);
+//                    }
 
                     teacherRepository.save(teacher);
 
@@ -90,7 +98,7 @@ public class UserService {
                 }
 
             } else {
-                throw new Exception("해당 이메일을 가진 사용자를 찾을 수 없습니다.");
+                throw new Exception("[add-info]해당 이메일을 가진 사용자를 찾을 수 없습니다.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,7 +112,7 @@ public class UserService {
             if (extractedEmail.isPresent()) {
                 // 여기서 userRepository.findByEmail()을 통해 사용자를 찾고 반환합니다.
                 return userRepository.findByEmail(extractedEmail.get())
-                        .orElseThrow(() -> new Exception("해당 이메일을 가진 사용자를 찾을 수 없습니다."));
+                        .orElseThrow(() -> new Exception("[validate] 해당 이메일을 가진 사용자를 찾을 수 없습니다."));
             } else {
                 throw new Exception("토큰에서 이메일을 추출할 수 없습니다.");
             }
