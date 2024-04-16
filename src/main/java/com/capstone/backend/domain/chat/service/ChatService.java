@@ -94,8 +94,8 @@ public class ChatService {
 
     /* AI 문제 소지의 발언 검출 */
     public boolean checkMessage(@Payload String message) {
-//        String baseUrl = "http://43.202.161.139:8888/";
-        String baseUrl = "http://localhost:8888/";
+        String baseUrl = "http://13.124.97.155:8888/";
+//        String baseUrl = "http://localhost:8888/";
         String requestUrl = baseUrl + message;
 
         try {
@@ -110,8 +110,10 @@ public class ChatService {
             Map<String, Object> responseBody = responseEntity.getBody();
 
             if (responseBody != null) {
-                List<?> modelResultList = (List<?>) responseBody.get("model_result");
-                int modelResult = (int) modelResultList.get(0); // 모델 결과 확인
+                Integer modelResult = (Integer) responseBody.get("model_result");
+                //int modelResult = (int) modelResultList.get(0); // 모델 결과 확인
+
+//                int modelResult = (int) responseBody.get("model_result");
 
                 // 응답이 1인지 여부 반환
                 return modelResult == 1;

@@ -53,8 +53,8 @@ public class ChatController {
 
         // AI 필터링
         String message = chat.getMessage(); // 채팅 메세지 추출
-//        boolean isHidden = service.checkMessage(message); // 검출 값 가져오기
-//        chat.setHidden(isHidden ? 1 : 0); // hidden 값 설정
+        boolean isHidden = service.checkMessage(message); // 검출 값 가져오기
+        chat.setHidden(isHidden ? 1 : 0); // hidden 값 설정
 
         log.debug("\"{}\" 분석 결과 {}입니다. /sub/chat/{} 으로 브로드캐스팅합니다.", chat.getMessage(),chat.getHidden(), chat.getRoomId());
         template.convertAndSend("/sub/chat/" + chat.getRoomId(), chat); // 메세지 발행
